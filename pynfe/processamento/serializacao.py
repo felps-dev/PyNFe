@@ -250,7 +250,8 @@ class SerializacaoXML(Serializacao):
         # etree.SubElement(prod, 'CEST').text = produto_service.cest
         if produto_servico.cbenef:
             etree.SubElement(prod, 'cBenef').text = produto_servico.cbenef
-        etree.SubElement(prod, 'CFOP').text = produto_servico.cfop
+        # TODO: Abrir um fix no github dos donos da lib
+        etree.SubElement(prod, 'CFOP').text = str(produto_servico.cfop)
         etree.SubElement(prod, 'uCom').text = produto_servico.unidade_comercial
         etree.SubElement(prod, 'qCom').text = str(produto_servico.quantidade_comercial or 0)
         etree.SubElement(prod, 'vUnCom').text = str('{:.10f}').format(produto_servico.valor_unitario_comercial or 0)
@@ -715,7 +716,9 @@ class SerializacaoXML(Serializacao):
             (produto_servico.imposto_importacao_valor_despesas_aduaneiras > 0) or\
             (produto_servico.imposto_importacao_valor > 0) or\
             (produto_servico.imposto_importacao_valor_iof > 0) or\
-            (produto_servico.cfop[1] == '3'):
+            (produto_servico.cfop == '3'):
+            # (produto_servico.cfop[1] == '3'):
+            # TODO: CFOP é um string então dá erro no array
             ii = etree.SubElement(tag_raiz, 'II')
             etree.SubElement(ii, 'vBC').text = '{:.2f}'.format(produto_servico.imposto_importacao_valor_base_calculo or 0)
             etree.SubElement(ii, 'vDespAdu').text = '{:.2f}'.format(produto_servico.imposto_importacao_valor_despesas_aduaneiras or 0)
